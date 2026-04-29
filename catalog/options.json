@@ -1,0 +1,765 @@
+{
+  "name": "rdbtools-option-catalog",
+  "options": [
+    {
+      "name": "NUM_KEYS",
+      "env": "NUM_KEYS",
+      "db_bench_flag": "--num",
+      "category": "workload",
+      "values": [1000000, 10000000, 40000000],
+      "executor": "db_bench"
+    },
+    {
+      "name": "VALUE_SIZE",
+      "env": "VALUE_SIZE",
+      "db_bench_flag": "--value_size",
+      "category": "workload",
+      "values": [100, 400, 800, 3200],
+      "executor": "db_bench"
+    },
+    {
+      "name": "KEY_SIZE",
+      "env": "KEY_SIZE",
+      "db_bench_flag": "--key_size",
+      "category": "workload",
+      "values": [16, 24, 32],
+      "executor": "db_bench"
+    },
+    {
+      "name": "NUM_THREADS",
+      "env": "NUM_THREADS",
+      "db_bench_flag": "--threads",
+      "category": "workload",
+      "values": [1, 2, 4, 8, 16],
+      "executor": "db_bench"
+    },
+    {
+      "name": "DURATION",
+      "env": "DURATION",
+      "db_bench_flag": "--duration",
+      "category": "workload",
+      "values": [0, 30, 120, 300],
+      "executor": "db_bench"
+    },
+    {
+      "name": "WRITES",
+      "env": "WRITES",
+      "db_bench_flag": "--writes",
+      "category": "workload",
+      "values": [0, 100000, 1000000],
+      "executor": "db_bench"
+    },
+    {
+      "name": "NUM_NEXTS_PER_SEEK",
+      "env": "NUM_NEXTS_PER_SEEK",
+      "db_bench_flag": "--seek_nexts",
+      "category": "workload",
+      "values": [10, 100],
+      "executor": "db_bench"
+    },
+    {
+      "name": "DURATION_RW",
+      "env": "DURATION_RW",
+      "db_bench_flag": "--duration",
+      "category": "workload",
+      "values": [30, 120, 300],
+      "executor": "rdbtools",
+      "notes": "Template duration used for rate-limited mixed read/write phases."
+    },
+    {
+      "name": "DURATION_RO",
+      "env": "DURATION_RO",
+      "db_bench_flag": "--duration",
+      "category": "workload",
+      "values": [30, 120, 300],
+      "executor": "rdbtools",
+      "notes": "Template duration used for read-only phases."
+    },
+    {
+      "name": "WRITE_BUFFER_SIZE_MB",
+      "env": "WRITE_BUFFER_SIZE_MB",
+      "db_bench_flag": "--write_buffer_size",
+      "category": "lsm",
+      "values": [16, 32, 64, 128, 256],
+      "executor": "db_bench"
+    },
+    {
+      "name": "TARGET_FILE_SIZE_BASE_MB",
+      "env": "TARGET_FILE_SIZE_BASE_MB",
+      "db_bench_flag": "--target_file_size_base",
+      "category": "lsm",
+      "values": [16, 32, 64, 128, 256],
+      "executor": "db_bench"
+    },
+    {
+      "name": "MAX_BYTES_FOR_LEVEL_BASE_MB",
+      "env": "MAX_BYTES_FOR_LEVEL_BASE_MB",
+      "db_bench_flag": "--max_bytes_for_level_base",
+      "category": "lsm",
+      "values": [64, 128, 256, 512, 1024],
+      "executor": "db_bench"
+    },
+    {
+      "name": "PER_LEVEL_FANOUT",
+      "env": "PER_LEVEL_FANOUT",
+      "db_bench_flag": "--max_bytes_for_level_multiplier",
+      "category": "lsm",
+      "values": [8, 10],
+      "executor": "db_bench"
+    },
+    {
+      "name": "LEVEL0_FILE_NUM_COMPACTION_TRIGGER",
+      "env": "LEVEL0_FILE_NUM_COMPACTION_TRIGGER",
+      "db_bench_flag": "--level0_file_num_compaction_trigger",
+      "category": "lsm",
+      "values": [4, 8, 16],
+      "executor": "db_bench",
+      "notes": "Pair with slowdown and stop triggers for L0 behavior studies."
+    },
+    {
+      "name": "LEVEL0_SLOWDOWN_WRITES_TRIGGER",
+      "env": "LEVEL0_SLOWDOWN_WRITES_TRIGGER",
+      "db_bench_flag": "--level0_slowdown_writes_trigger",
+      "category": "lsm",
+      "values": [16, 20, 30, 200],
+      "executor": "db_bench",
+      "notes": "Legacy rx2 benchmark.sh defaults to 20 for leveled and blob runs."
+    },
+    {
+      "name": "LEVEL0_STOP_WRITES_TRIGGER",
+      "env": "LEVEL0_STOP_WRITES_TRIGGER",
+      "db_bench_flag": "--level0_stop_writes_trigger",
+      "category": "lsm",
+      "values": [20, 30, 36, 200],
+      "executor": "db_bench",
+      "notes": "Legacy rx2 benchmark.sh defaults to 30 for leveled and blob runs."
+    },
+    {
+      "name": "MAX_BACKGROUND_JOBS",
+      "env": "MAX_BACKGROUND_JOBS",
+      "db_bench_flag": "--max_background_jobs",
+      "category": "lsm",
+      "values": [2, 4, 8, 16],
+      "executor": "db_bench"
+    },
+    {
+      "name": "OPEN_FILES",
+      "env": "OPEN_FILES",
+      "db_bench_flag": "--open_files",
+      "category": "lsm",
+      "values": [-1, 256, 512, 1026],
+      "executor": "db_bench"
+    },
+    {
+      "name": "SUBCOMPACTIONS",
+      "env": "SUBCOMPACTIONS",
+      "db_bench_flag": "--subcompactions",
+      "category": "lsm",
+      "values": [1, 2, 4],
+      "executor": "db_bench"
+    },
+    {
+      "name": "TARGET_FILE_SIZE_MULTIPLIER",
+      "env": "TARGET_FILE_SIZE_MULTIPLIER",
+      "db_bench_flag": "--target_file_size_multiplier",
+      "category": "lsm",
+      "values": [1, 2, 4],
+      "executor": "db_bench"
+    },
+    {
+      "name": "COMPACTION_READAHEAD_SIZE",
+      "env": "COMPACTION_READAHEAD_SIZE",
+      "db_bench_flag": "--compaction_readahead_size",
+      "category": "io",
+      "values": [0, 122880, 262144, 491520, 2097152],
+      "executor": "db_bench"
+    },
+    {
+      "name": "USE_O_DIRECT",
+      "env": "USE_O_DIRECT",
+      "db_bench_flag": "--use_direct_reads/--use_direct_io_for_flush_and_compaction",
+      "category": "io",
+      "values": [0, 1],
+      "executor": "db_bench",
+      "notes": "When set to 1, rdbtools also sets BYTES_PER_SYNC=0 unless explicitly overridden."
+    },
+    {
+      "name": "BYTES_PER_SYNC",
+      "env": "BYTES_PER_SYNC",
+      "db_bench_flag": "--bytes_per_sync",
+      "category": "io",
+      "values": [0, 1048576, 8388608],
+      "executor": "db_bench"
+    },
+    {
+      "name": "WAL_BYTES_PER_SYNC",
+      "env": "WAL_BYTES_PER_SYNC",
+      "db_bench_flag": "--wal_bytes_per_sync",
+      "category": "wal",
+      "values": [0, 524288, 2097152],
+      "executor": "db_bench",
+      "tunability": "db_bench_exact",
+      "notes": "SurrealDB sync=every overrides the initial 2 MiB setting to 512 KiB via CommitCoordinator."
+    },
+    {
+      "name": "MB_WRITE_PER_SEC",
+      "env": "MB_WRITE_PER_SEC",
+      "db_bench_flag": "--benchmark_write_rate_limit",
+      "category": "io",
+      "values": [0, 64, 128, 256],
+      "executor": "db_bench",
+      "notes": "Used by rate-limited mixed phases, not load phases."
+    },
+    {
+      "name": "CACHE_SIZE_MB",
+      "env": "CACHE_SIZE_MB",
+      "db_bench_flag": "--cache_size",
+      "category": "cache",
+      "values": [1024, 4096, 8192, 16384, 32768],
+      "executor": "db_bench"
+    },
+    {
+      "name": "CACHE_NUMSHARDBITS",
+      "env": "CACHE_NUMSHARDBITS",
+      "db_bench_flag": "--cache_numshardbits",
+      "category": "cache",
+      "values": [6],
+      "executor": "db_bench",
+      "notes": "Legacy rx2 benchmark.sh default."
+    },
+    {
+      "name": "BLOCK_SIZE",
+      "env": "BLOCK_SIZE",
+      "db_bench_flag": "--block_size",
+      "category": "cache",
+      "values": [4096, 8192, 16384, 65536],
+      "executor": "db_bench"
+    },
+    {
+      "name": "METADATA_BLOCK_SIZE",
+      "env": "METADATA_BLOCK_SIZE",
+      "db_bench_flag": "--metadata_block_size",
+      "category": "cache",
+      "values": [4096, 16384, 65536],
+      "executor": "db_bench",
+      "tunability": "db_bench_exact",
+      "notes": "SurrealDB memory_manager.rs sets 4096; legacy rx2 benchmark.sh default is 16384."
+    },
+    {
+      "name": "CACHE_INDEX_AND_FILTER_BLOCKS",
+      "env": "CACHE_INDEX_AND_FILTER_BLOCKS",
+      "db_bench_flag": "--cache_index_and_filter_blocks",
+      "category": "cache",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "PARTITION_INDEX_AND_FILTERS",
+      "env": "PARTITION_INDEX_AND_FILTERS",
+      "db_bench_flag": "--partition_index_and_filters",
+      "category": "cache",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "PIN_L0_FILTER_AND_INDEX_BLOCKS_IN_CACHE",
+      "env": "PIN_L0_FILTER_AND_INDEX_BLOCKS_IN_CACHE",
+      "db_bench_flag": "--pin_l0_filter_and_index_blocks_in_cache",
+      "category": "cache",
+      "values": [0, 1],
+      "executor": "db_bench",
+      "tunability": "db_bench_exact",
+      "notes": "SurrealDB memory_manager.rs enables this in BlockBasedOptions."
+    },
+    {
+      "name": "PIN_TOP_LEVEL_INDEX_AND_FILTER",
+      "env": "PIN_TOP_LEVEL_INDEX_AND_FILTER",
+      "db_bench_flag": "--pin_top_level_index_and_filter",
+      "category": "cache",
+      "values": [0, 1],
+      "executor": "db_bench",
+      "tunability": "db_bench_exact",
+      "notes": "SurrealDB memory_manager.rs enables this in BlockBasedOptions."
+    },
+    {
+      "name": "WHOLE_KEY_FILTERING",
+      "env": "WHOLE_KEY_FILTERING",
+      "db_bench_flag": "--whole_key_filtering",
+      "category": "cache",
+      "values": [0, 1],
+      "executor": "db_bench",
+      "tunability": "db_bench_approx",
+      "notes": "SurrealDB only applies the configured value when the custom prefix extractor is enabled; db_bench cannot model that key layout."
+    },
+    {
+      "name": "COMPRESSION_TYPE",
+      "env": "COMPRESSION_TYPE",
+      "db_bench_flag": "--compression_type",
+      "category": "compression",
+      "values": ["none", "lz4", "zstd"],
+      "executor": "db_bench"
+    },
+    {
+      "name": "BOTTOMMOST_COMPRESSION",
+      "env": "BOTTOMMOST_COMPRESSION",
+      "db_bench_flag": "--bottommost_compression_type",
+      "category": "compression",
+      "values": ["disable", "none", "lz4", "zstd"],
+      "executor": "db_bench"
+    },
+    {
+      "name": "MIN_LEVEL_TO_COMPRESS",
+      "env": "MIN_LEVEL_TO_COMPRESS",
+      "db_bench_flag": "--min_level_to_compress",
+      "category": "compression",
+      "values": [-1, 0, 1, 2, 3],
+      "executor": "db_bench"
+    },
+    {
+      "name": "COMPACTION_STYLE",
+      "env": "COMPACTION_STYLE",
+      "db_bench_flag": "--compaction_style/--enable_blob_files",
+      "category": "lsm",
+      "values": ["leveled", "universal", "blob"],
+      "executor": "db_bench"
+    },
+    {
+      "name": "MIN_BLOB_SIZE",
+      "env": "MIN_BLOB_SIZE",
+      "db_bench_flag": "--min_blob_size",
+      "category": "blobdb",
+      "values": [64, 256, 1024, 4096],
+      "depends_on": { "COMPACTION_STYLE": "blob" },
+      "executor": "db_bench"
+    },
+    {
+      "name": "BLOB_FILE_SIZE",
+      "env": "BLOB_FILE_SIZE",
+      "db_bench_flag": "--blob_file_size",
+      "category": "blobdb",
+      "values": [8388608, 16777216, 67108864, 268435456],
+      "depends_on": { "COMPACTION_STYLE": "blob" },
+      "executor": "db_bench",
+      "notes": "Very small values may need a high ulimit -n."
+    },
+    {
+      "name": "BLOB_COMPRESSION_TYPE",
+      "env": "BLOB_COMPRESSION_TYPE",
+      "db_bench_flag": "--blob_compression_type",
+      "category": "blobdb",
+      "values": ["none", "snappy", "lz4", "zstd"],
+      "depends_on": { "COMPACTION_STYLE": "blob" },
+      "executor": "db_bench"
+    },
+    {
+      "name": "BLOB_GC_AGE_CUTOFF",
+      "env": "BLOB_GC_AGE_CUTOFF",
+      "db_bench_flag": "--blob_garbage_collection_age_cutoff",
+      "category": "blobdb",
+      "values": [0.25, 0.5, 0.75, 1.0],
+      "depends_on": { "COMPACTION_STYLE": "blob" },
+      "executor": "db_bench"
+    },
+    {
+      "name": "BLOB_GC_FORCE_THRESHOLD",
+      "env": "BLOB_GC_FORCE_THRESHOLD",
+      "db_bench_flag": "--blob_garbage_collection_force_threshold",
+      "category": "blobdb",
+      "values": [0.5, 0.75, 1.0],
+      "depends_on": { "COMPACTION_STYLE": "blob" },
+      "executor": "db_bench"
+    },
+    {
+      "name": "ENABLE_BLOB_GC",
+      "env": "ENABLE_BLOB_GC",
+      "db_bench_flag": "--enable_blob_garbage_collection",
+      "category": "blobdb",
+      "values": [0, 1],
+      "depends_on": { "COMPACTION_STYLE": "blob" },
+      "executor": "db_bench"
+    },
+    {
+      "name": "BLOB_COMPACTION_READAHEAD_SIZE",
+      "env": "BLOB_COMPACTION_READAHEAD_SIZE",
+      "db_bench_flag": "--blob_compaction_readahead_size",
+      "category": "blobdb",
+      "values": [0, 262144, 1048576],
+      "depends_on": { "COMPACTION_STYLE": "blob" },
+      "executor": "db_bench"
+    },
+    {
+      "name": "MAX_WRITE_BUFFER_NUMBER",
+      "env": "MAX_WRITE_BUFFER_NUMBER",
+      "db_bench_flag": "--max_write_buffer_number",
+      "category": "lsm",
+      "values": [2, 4, 8, 16, 32],
+      "executor": "db_bench"
+    },
+    {
+      "name": "MIN_WRITE_BUFFER_NUMBER_TO_MERGE",
+      "env": "MIN_WRITE_BUFFER_NUMBER_TO_MERGE",
+      "db_bench_flag": "--min_write_buffer_number_to_merge",
+      "category": "lsm",
+      "values": [1, 2, 4],
+      "executor": "db_bench"
+    },
+    {
+      "name": "INITIAL_AUTO_READAHEAD_SIZE",
+      "env": "INITIAL_AUTO_READAHEAD_SIZE",
+      "db_bench_flag": "--initial_auto_readahead_size",
+      "category": "cache",
+      "values": [8192, 65536],
+      "executor": "db_bench"
+    },
+    {
+      "name": "MAX_AUTO_READAHEAD_SIZE",
+      "env": "MAX_AUTO_READAHEAD_SIZE",
+      "db_bench_flag": "--max_auto_readahead_size",
+      "category": "cache",
+      "values": [262144, 1048576, 4194304],
+      "executor": "db_bench"
+    },
+    {
+      "name": "FILE_READS_FOR_AUTO_READAHEAD",
+      "env": "FILE_READS_FOR_AUTO_READAHEAD",
+      "db_bench_flag": "--num_file_reads_for_auto_readahead",
+      "category": "cache",
+      "values": [0, 1, 2, 4],
+      "executor": "db_bench"
+    },
+    {
+      "name": "WAL_SIZE_LIMIT_MB",
+      "env": "WAL_SIZE_LIMIT_MB",
+      "db_bench_flag": "--wal_size_limit_MB",
+      "category": "wal",
+      "values": [0, 32, 128],
+      "executor": "db_bench",
+      "notes": "Limits archived obsolete WAL retention in MiB. This does not change active WAL sync safety."
+    },
+    {
+      "name": "MANUAL_WAL_FLUSH",
+      "env": "MANUAL_WAL_FLUSH",
+      "db_bench_flag": "--manual_wal_flush",
+      "category": "wal",
+      "values": [0, 1],
+      "executor": "db_bench",
+      "tunability": "db_bench_approx",
+      "notes": "SurrealDB sync=every uses manual WAL flushing plus a grouped commit coordinator; db_bench can only model the RocksDB option."
+    },
+    {
+      "name": "CACHE_TYPE",
+      "env": "CACHE_TYPE",
+      "db_bench_flag": "--cache_type",
+      "category": "cache",
+      "values": ["lru_cache", "hyper_clock_cache", "auto_hyper_clock_cache"],
+      "executor": "db_bench",
+      "notes": "Default matches Mark's benchmark.sh unless explicitly overridden."
+    },
+    {
+      "name": "COMPRESSION_MAX_DICT_BYTES",
+      "env": "COMPRESSION_MAX_DICT_BYTES",
+      "db_bench_flag": "--compression_max_dict_bytes",
+      "category": "compression",
+      "values": [0],
+      "executor": "db_bench"
+    },
+    {
+      "name": "COMPRESSION_RATIO",
+      "env": "COMPRESSION_RATIO",
+      "db_bench_flag": "--compression_ratio",
+      "category": "compression",
+      "values": [0.5],
+      "executor": "db_bench"
+    },
+    {
+      "name": "NUM_LEVELS",
+      "env": "NUM_LEVELS",
+      "db_bench_flag": "--num_levels",
+      "category": "lsm",
+      "values": [8, 40],
+      "executor": "db_bench"
+    },
+    {
+      "name": "LEVEL_COMPACTION_DYNAMIC_LEVEL_BYTES",
+      "env": "LEVEL_COMPACTION_DYNAMIC_LEVEL_BYTES",
+      "db_bench_flag": "--level_compaction_dynamic_level_bytes",
+      "category": "lsm",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "CACHE_HIGH_PRI_POOL_RATIO",
+      "env": "CACHE_HIGH_PRI_POOL_RATIO",
+      "db_bench_flag": "--cache_high_pri_pool_ratio",
+      "category": "cache",
+      "values": [0.5],
+      "executor": "db_bench"
+    },
+    {
+      "name": "CACHE_LOW_PRI_POOL_RATIO",
+      "env": "CACHE_LOW_PRI_POOL_RATIO",
+      "db_bench_flag": "--cache_low_pri_pool_ratio",
+      "category": "cache",
+      "values": [0.0],
+      "executor": "db_bench"
+    },
+    {
+      "name": "USE_BLOB_CACHE",
+      "env": "USE_BLOB_CACHE",
+      "db_bench_flag": "--use_blob_cache",
+      "category": "blobdb",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "USE_SHARED_BLOCK_AND_BLOB_CACHE",
+      "env": "USE_SHARED_BLOCK_AND_BLOB_CACHE",
+      "db_bench_flag": "--use_shared_block_and_blob_cache",
+      "category": "blobdb",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "BLOB_CACHE_SIZE",
+      "env": "BLOB_CACHE_SIZE",
+      "db_bench_flag": "--blob_cache_size",
+      "category": "blobdb",
+      "values": [17179869184],
+      "executor": "db_bench"
+    },
+    {
+      "name": "BLOB_CACHE_NUMSHARDBITS",
+      "env": "BLOB_CACHE_NUMSHARDBITS",
+      "db_bench_flag": "--blob_cache_numshardbits",
+      "category": "blobdb",
+      "values": [6],
+      "executor": "db_bench"
+    },
+    {
+      "name": "PREPOPULATE_BLOB_CACHE",
+      "env": "PREPOPULATE_BLOB_CACHE",
+      "db_bench_flag": "--prepopulate_blob_cache",
+      "category": "blobdb",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "PREPOPULATE_BLOCK_CACHE",
+      "env": "PREPOPULATE_BLOCK_CACHE",
+      "db_bench_flag": "--prepopulate_block_cache",
+      "category": "cache",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "VERIFY_CHECKSUM",
+      "env": "VERIFY_CHECKSUM",
+      "db_bench_flag": "--verify_checksum",
+      "category": "operational",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "DELETE_OBSOLETE_FILES_PERIOD_MICROS",
+      "env": "DELETE_OBSOLETE_FILES_PERIOD_MICROS",
+      "db_bench_flag": "--delete_obsolete_files_period_micros",
+      "category": "operational",
+      "values": [62914560],
+      "executor": "db_bench"
+    },
+    {
+      "name": "STATISTICS",
+      "env": "STATISTICS",
+      "db_bench_flag": "--statistics",
+      "category": "operational",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "STATS_PER_INTERVAL",
+      "env": "STATS_PER_INTERVAL",
+      "db_bench_flag": "--stats_per_interval",
+      "category": "operational",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "HISTOGRAM",
+      "env": "HISTOGRAM",
+      "db_bench_flag": "--histogram",
+      "category": "operational",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "BLOOM_BITS",
+      "env": "BLOOM_BITS",
+      "db_bench_flag": "--bloom_bits",
+      "category": "cache",
+      "values": [10],
+      "executor": "db_bench"
+    },
+    {
+      "name": "UNIVERSAL_COMPRESSION_SIZE_PERCENT",
+      "env": "UNIVERSAL_COMPRESSION_SIZE_PERCENT",
+      "db_bench_flag": "--universal_compression_size_percent",
+      "category": "lsm",
+      "values": [-1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "UNIVERSAL_MIN_MERGE_WIDTH",
+      "env": "UNIVERSAL_MIN_MERGE_WIDTH",
+      "db_bench_flag": "--universal_min_merge_width",
+      "category": "lsm",
+      "values": [2],
+      "executor": "db_bench"
+    },
+    {
+      "name": "UNIVERSAL_MAX_MERGE_WIDTH",
+      "env": "UNIVERSAL_MAX_MERGE_WIDTH",
+      "db_bench_flag": "--universal_max_merge_width",
+      "category": "lsm",
+      "values": [20],
+      "executor": "db_bench"
+    },
+    {
+      "name": "UNIVERSAL_SIZE_RATIO",
+      "env": "UNIVERSAL_SIZE_RATIO",
+      "db_bench_flag": "--universal_size_ratio",
+      "category": "lsm",
+      "values": [1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "UNIVERSAL_MAX_SIZE_AMP",
+      "env": "UNIVERSAL_MAX_SIZE_AMP",
+      "db_bench_flag": "--universal_max_size_amplification_percent",
+      "category": "lsm",
+      "values": [200],
+      "executor": "db_bench"
+    },
+    {
+      "name": "UNIVERSAL_ALLOW_TRIVIAL_MOVE",
+      "env": "UNIVERSAL_ALLOW_TRIVIAL_MOVE",
+      "db_bench_flag": "--universal_allow_trivial_move",
+      "category": "lsm",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "BATCH_SIZE",
+      "env": "BATCH_SIZE",
+      "db_bench_flag": "--batch_size",
+      "category": "workload",
+      "values": [10],
+      "executor": "db_bench"
+    },
+    {
+      "name": "SEED",
+      "env": "SEED",
+      "db_bench_flag": "--seed",
+      "category": "workload",
+      "values": [1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "REPORT_FILE",
+      "env": "REPORT_FILE",
+      "db_bench_flag": "--report_file",
+      "category": "operational",
+      "executor": "db_bench"
+    },
+    {
+      "name": "MEMTABLE_REP",
+      "env": "MEMTABLE_REP",
+      "db_bench_flag": "--memtablerep",
+      "category": "lsm",
+      "values": ["skip_list", "vector"],
+      "executor": "db_bench"
+    },
+    {
+      "name": "MERGE_OPERATOR",
+      "env": "MERGE_OPERATOR",
+      "db_bench_flag": "--merge_operator",
+      "category": "workload",
+      "values": ["put"],
+      "executor": "db_bench"
+    },
+    {
+      "name": "ALLOW_CONCURRENT_MEMTABLE_WRITE",
+      "env": "ALLOW_CONCURRENT_MEMTABLE_WRITE",
+      "db_bench_flag": "--allow_concurrent_memtable_write",
+      "category": "lsm",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "DISABLE_WAL",
+      "env": "DISABLE_WAL",
+      "db_bench_flag": "--disable_wal",
+      "category": "wal",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "USE_EXISTING_DB",
+      "env": "USE_EXISTING_DB",
+      "db_bench_flag": "--use_existing_db",
+      "category": "operational",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "SYNC",
+      "env": "SYNC",
+      "db_bench_flag": "--sync",
+      "category": "wal",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "REVERSE_ITERATOR",
+      "env": "REVERSE_ITERATOR",
+      "db_bench_flag": "--reverse_iterator",
+      "category": "workload",
+      "values": [0, 1],
+      "executor": "db_bench"
+    },
+    {
+      "name": "DB_BENCH_NO_SYNC",
+      "env": "DB_BENCH_NO_SYNC",
+      "category": "operational",
+      "values": [0, 1],
+      "executor": "rdbtools"
+    },
+    {
+      "name": "STATS_INTERVAL_SECONDS",
+      "env": "STATS_INTERVAL_SECONDS",
+      "category": "operational",
+      "values": [30, 60],
+      "executor": "rdbtools"
+    },
+    {
+      "name": "REPORT_INTERVAL_SECONDS",
+      "env": "REPORT_INTERVAL_SECONDS",
+      "category": "operational",
+      "values": [1, 10],
+      "executor": "rdbtools"
+    },
+    {
+      "name": "ROCKSDB_GROUPED_COMMIT_TIMEOUT",
+      "env": "SURREAL_ROCKSDB_GROUPED_COMMIT_TIMEOUT",
+      "category": "surrealdb-only",
+      "executor": "surrealdb",
+      "notes": "Requires a SurrealDB workload harness; db_bench cannot model grouped commit."
+    },
+    {
+      "name": "ROCKSDB_PREFIX_EXTRACTOR_ENABLED",
+      "env": "SURREAL_ROCKSDB_PREFIX_EXTRACTOR_ENABLED",
+      "category": "surrealdb-only",
+      "executor": "surrealdb",
+      "notes": "Depends on SurrealDB key layout and prefix extractor behavior."
+    }
+  ]
+}

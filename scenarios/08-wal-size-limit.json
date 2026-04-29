@@ -1,0 +1,41 @@
+{
+  "name": "wal-size-limit",
+  "description": "Sweep RocksDB archived WAL retention limit. This tests disk footprint behavior, not active WAL sync safety.",
+  "binary_dir": "bin",
+  "binaries": ["10.6.clang"],
+  "db_dir": "/data/m/rx",
+  "output_dir": "runs/wal-size-limit",
+  "machine": "c8r16",
+  "workloads": ["iobuf"],
+  "pipeline": "lsm-default",
+  "baseline": {
+    "NUM_THREADS": 1,
+    "NUM_KEYS": 40000000,
+    "VALUE_SIZE": 400,
+    "DURATION_RW": 30,
+    "DURATION_RO": 30,
+    "COMPACTION_STYLE": "leveled",
+    "WRITE_BUFFER_SIZE_MB": 16,
+    "TARGET_FILE_SIZE_BASE_MB": 16,
+    "MAX_BYTES_FOR_LEVEL_BASE_MB": 64,
+    "MAX_BACKGROUND_JOBS": 4,
+    "MIN_LEVEL_TO_COMPRESS": 3,
+    "CACHE_INDEX_AND_FILTER_BLOCKS": 1,
+    "WAL_SIZE_LIMIT_MB": 0
+  },
+  "sweeps": [
+    {
+      "name": "wal_size_limit",
+      "mode": "one_at_a_time",
+      "params": {
+        "WAL_SIZE_LIMIT_MB": [0, 32, 128]
+      }
+    }
+  ],
+  "execution": {
+    "remove_db_before_version": true,
+    "cooldown_seconds": 0,
+    "smoke": false,
+    "clean_env": false
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "name": "target-file-size-base",
+  "description": "Focused target_file_size_base sweep for compaction shape, file count, and fragmentation effects.",
+  "binary_dir": "bin",
+  "binaries": ["10.6.clang"],
+  "db_dir": "/data/m/rx",
+  "output_dir": "runs/target-file-size-base",
+  "warnings": [
+    "SurrealDB cnf.rs currently defaults compaction_readahead_size to 256 KiB; the provided shell script used 8 MiB, so this scenario follows cnf.rs."
+  ],
+  "machine": {},
+  "workloads": [
+    {
+      "name": "surrealdb-buffered-lz4-zstd",
+      "env": {
+        "COMPRESSION_TYPE": "lz4",
+        "BOTTOMMOST_COMPRESSION": "zstd",
+        "USE_O_DIRECT": 0
+      }
+    }
+  ],
+  "pipeline": "lsm-default",
+  "baseline": {
+    "NUM_THREADS": 1,
+    "NUM_KEYS": 40000000,
+    "VALUE_SIZE": 400,
+    "NUM_NEXTS_PER_SEEK": 10,
+    "DURATION_RW": 30,
+    "DURATION_RO": 30,
+    "COMPACTION_STYLE": "leveled",
+    "WRITE_BUFFER_SIZE_MB": 64,
+    "TARGET_FILE_SIZE_BASE_MB": 64,
+    "TARGET_FILE_SIZE_MULTIPLIER": 2,
+    "MAX_BYTES_FOR_LEVEL_BASE_MB": 256,
+    "MAX_BACKGROUND_JOBS": 4,
+    "SUBCOMPACTIONS": 4,
+    "PER_LEVEL_FANOUT": 10,
+    "LEVEL0_FILE_NUM_COMPACTION_TRIGGER": 4,
+    "OPEN_FILES": 1026,
+    "BLOCK_SIZE": 65536,
+    "CACHE_SIZE_MB": 7168,
+    "CACHE_NUMSHARDBITS": 6,
+    "BYTES_PER_SYNC": 1048576,
+    "METADATA_BLOCK_SIZE": 16384,
+    "COMPACTION_READAHEAD_SIZE": 262144,
+    "MIN_LEVEL_TO_COMPRESS": 3,
+    "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+  },
+  "sweeps": [
+    {
+      "name": "target_file_size_base",
+      "mode": "one_at_a_time",
+      "params": {
+        "TARGET_FILE_SIZE_BASE_MB": [8, 16, 32, 64]
+      }
+    }
+  ],
+  "execution": {
+    "remove_db_before_version": true,
+    "cooldown_seconds": 0,
+    "smoke": false,
+    "clean_env": false
+  }
+}

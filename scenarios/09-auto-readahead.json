@@ -1,0 +1,44 @@
+{
+  "name": "auto-readahead",
+  "description": "Range-scan-focused sweep for RocksDB iterator auto-readahead limits.",
+  "binary_dir": "bin",
+  "binaries": ["10.6.clang"],
+  "db_dir": "/data/m/rx",
+  "output_dir": "runs/auto-readahead",
+  "machine": "c8r16",
+  "workloads": ["iodir"],
+  "pipeline": "lsm-default",
+  "baseline": {
+    "NUM_THREADS": 1,
+    "NUM_KEYS": 40000000,
+    "VALUE_SIZE": 400,
+    "DURATION_RW": 30,
+    "DURATION_RO": 30,
+    "COMPACTION_STYLE": "leveled",
+    "WRITE_BUFFER_SIZE_MB": 16,
+    "TARGET_FILE_SIZE_BASE_MB": 16,
+    "MAX_BYTES_FOR_LEVEL_BASE_MB": 64,
+    "MAX_BACKGROUND_JOBS": 4,
+    "MIN_LEVEL_TO_COMPRESS": 3,
+    "CACHE_INDEX_AND_FILTER_BLOCKS": 1,
+    "INITIAL_AUTO_READAHEAD_SIZE": 8192,
+    "MAX_AUTO_READAHEAD_SIZE": 4194304,
+    "FILE_READS_FOR_AUTO_READAHEAD": 2
+  },
+  "sweeps": [
+    {
+      "name": "auto_readahead",
+      "mode": "matrix",
+      "params": {
+        "MAX_AUTO_READAHEAD_SIZE": [524288, 1048576, 4194304],
+        "FILE_READS_FOR_AUTO_READAHEAD": [0, 2]
+      }
+    }
+  ],
+  "execution": {
+    "remove_db_before_version": true,
+    "cooldown_seconds": 0,
+    "smoke": false,
+    "clean_env": false
+  }
+}

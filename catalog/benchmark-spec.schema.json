@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://surrealdb.local/rdbtools/benchmark-spec.schema.json",
+  "title": "rdbtools benchmark spec",
+  "type": "object",
+  "required": ["name", "binaries", "db_dir", "output_dir", "machine", "workloads", "baseline"],
+  "additionalProperties": true,
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "binaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          { "type": "string", "minLength": 1 },
+          {
+            "type": "object",
+            "required": ["label", "path"],
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "path": { "type": "string", "minLength": 1 },
+              "toolchain": { "type": "string" },
+              "git_hash": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        ]
+      }
+    },
+    "binary_dir": { "type": "string" },
+    "rocksdb_source": { "type": "string" },
+    "db_dir": { "type": "string", "minLength": 1 },
+    "wal_dir": { "type": "string" },
+    "output_dir": { "type": "string", "minLength": 1 },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "machine": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "$ref": "#/$defs/envMap" }
+      ]
+    },
+    "workloads": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          { "type": "string", "minLength": 1 },
+          { "$ref": "#/$defs/workload" }
+        ]
+      }
+    },
+    "baseline": { "$ref": "#/$defs/envMap" },
+    "sweeps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/sweep" }
+    },
+    "pipeline": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "$ref": "#/$defs/pipeline" }
+      ]
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "remove_db_before_version": { "type": "boolean" },
+        "cooldown_seconds": { "type": "integer", "minimum": 0 },
+        "smoke": { "type": "boolean" },
+        "force": { "type": "boolean" },
+        "clean_env": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "envValue": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "integer" },
+        { "type": "boolean" },
+        { "type": "null" }
+      ]
+    },
+    "envMap": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/envValue" }
+    },
+    "sweep": {
+      "type": "object",
+      "required": ["name", "mode"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "mode": { "enum": ["one_at_a_time", "matrix", "cases"] },
+        "params": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/envValue" }
+          }
+        },
+        "cases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "updates"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "updates": { "$ref": "#/$defs/envMap" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "workload": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "env": { "$ref": "#/$defs/envMap" },
+        "phases": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "pipeline": {
+      "type": "object",
+      "required": ["name", "phases"],
+      "properties": {
+        "name": { "type": "string" },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "job"],
+            "properties": {
+              "name": { "type": "string" },
+              "job": { "type": "string" },
+              "rate_limited": { "type": "boolean" },
+              "full_only": { "type": "boolean" },
+              "env": { "$ref": "#/$defs/envMap" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

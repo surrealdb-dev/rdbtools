@@ -1,0 +1,47 @@
+{
+  "lsm-write-heavy": {
+    "description": "Write-heavy LSM screening workload for SurrealDB RocksDB defaults.",
+    "pipeline": "lsm-default",
+    "objective_tags": ["throughput", "ssd_efficiency", "balanced"],
+    "blob_meaningful": false,
+    "scan_heavy": false,
+    "surrealdb_only_caveats": ["grouped commit", "prefix extractor", "multi-CF behavior"],
+    "env": {
+      "NUM_KEYS": 40000000,
+      "NUM_THREADS": 1,
+      "VALUE_SIZE": 400,
+      "DURATION_RW": 30,
+      "DURATION_RO": 30
+    }
+  },
+  "blob-heavy": {
+    "description": "Large-value workload for BlobDB enablement and blob-file sizing.",
+    "pipeline": "lsm-default",
+    "objective_tags": ["blob_heavy", "throughput", "ssd_efficiency"],
+    "blob_meaningful": true,
+    "scan_heavy": false,
+    "surrealdb_only_caveats": ["grouped commit", "prefix extractor", "multi-CF behavior"],
+    "env": {
+      "NUM_KEYS": 10000000,
+      "NUM_THREADS": 1,
+      "VALUE_SIZE": 8192,
+      "DURATION_RW": 30,
+      "DURATION_RO": 30
+    }
+  },
+  "scan-heavy": {
+    "description": "Range-scan focused workload for auto readahead and table layout tuning.",
+    "pipeline": "lsm-default",
+    "objective_tags": ["scan_heavy", "balanced"],
+    "blob_meaningful": false,
+    "scan_heavy": true,
+    "surrealdb_only_caveats": ["prefix extractor", "inline scan threshold", "SurrealDB key layout"],
+    "env": {
+      "NUM_KEYS": 40000000,
+      "NUM_THREADS": 1,
+      "VALUE_SIZE": 400,
+      "DURATION_RW": 30,
+      "DURATION_RO": 30
+    }
+  }
+}

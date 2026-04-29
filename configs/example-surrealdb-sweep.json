@@ -1,0 +1,55 @@
+{
+  "name": "surrealdb-rocksdb-defaults-smoke",
+  "description": "Smoke-sized expansion of the SurrealDB sweep. 1 thread x 30s phases, useful for validating spec shape and command construction. Not sized for publishable benchmark numbers.",
+  "binary_dir": "bin",
+  "binaries": ["10.6.clang"],
+  "rocksdb_source": "/Users/kfarhan/workspace/surrealdb/rocksdb",
+  "db_dir": "/data/m/rx",
+  "output_dir": "runs/surrealdb-defaults-smoke",
+  "machine": "c8r16",
+  "workloads": ["iobuf", "blob-iobuf"],
+  "pipeline": "lsm-default",
+  "nk_mem": 4000000,
+  "nk_io": 40000000,
+  "baseline": {
+    "NUM_THREADS": 1,
+    "VALUE_SIZE": 400,
+    "DURATION_RW": 30,
+    "DURATION_RO": 30,
+    "COMPACTION_STYLE": "blob",
+    "WRITE_BUFFER_SIZE_MB": 16,
+    "TARGET_FILE_SIZE_BASE_MB": 16,
+    "MAX_BYTES_FOR_LEVEL_BASE_MB": 64,
+    "MAX_BACKGROUND_JOBS": 4,
+    "MIN_LEVEL_TO_COMPRESS": 3,
+    "CACHE_INDEX_AND_FILTER_BLOCKS": 1,
+    "BLOB_GC_AGE_CUTOFF": 0.25,
+    "BLOB_GC_FORCE_THRESHOLD": 1,
+    "BLOB_FILE_SIZE": 268435456
+  },
+  "sweeps": [
+    {
+      "name": "blob_file_size",
+      "mode": "one_at_a_time",
+      "params": {
+        "BLOB_FILE_SIZE": [8388608, 16777216, 67108864, 268435456]
+      }
+    },
+    {
+      "name": "readahead_io_matrix",
+      "mode": "matrix",
+      "params": {
+        "COMPACTION_READAHEAD_SIZE": [122880, 262144, 491520, 2097152],
+        "USE_O_DIRECT": [0, 1],
+        "COMPRESSION_TYPE": ["none", "lz4"]
+      }
+    }
+  ],
+  "execution": {
+    "remove_db_before_version": true,
+    "cooldown_seconds": 0,
+    "smoke": true,
+    "clean_env": false,
+    "capture_io_stats": false
+  }
+}

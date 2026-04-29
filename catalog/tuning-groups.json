@@ -1,0 +1,103 @@
+{
+  "name": "rdbtools-tuning-groups",
+  "groups": [
+    {
+      "id": "write_buffer_size",
+      "description": "Screen SurrealDB write buffer size tiers around the detected default.",
+      "objective_tags": ["throughput", "ssd_efficiency", "balanced"],
+      "knobs": ["WRITE_BUFFER_SIZE_MB"],
+      "mode": "one_at_a_time",
+      "budgets": {
+        "smoke": [128],
+        "standard": [32, 64, 128],
+        "exhaustive": [16, 32, 64, 128, 256]
+      },
+      "dependencies": [],
+      "caveats": ["Memory impact is coupled with MAX_WRITE_BUFFER_NUMBER and SurrealDB's write buffer manager."]
+    },
+    {
+      "id": "target_file_size_base",
+      "description": "Screen SurrealDB target file size base tiers.",
+      "objective_tags": ["ssd_efficiency", "balanced"],
+      "knobs": ["TARGET_FILE_SIZE_BASE_MB"],
+      "mode": "one_at_a_time",
+      "budgets": {
+        "smoke": [64],
+        "standard": [8, 16, 32, 64],
+        "exhaustive": [8, 16, 32, 64, 128]
+      },
+      "dependencies": [],
+      "caveats": ["Interacts with L0 triggers, max bytes for level base, and compaction pressure."]
+    },
+    {
+      "id": "compaction_readahead",
+      "description": "Screen compaction readahead values including SurrealDB's 256 KiB default and larger legacy/rx2 values.",
+      "objective_tags": ["ssd_efficiency", "balanced"],
+      "knobs": ["COMPACTION_READAHEAD_SIZE"],
+      "mode": "one_at_a_time",
+      "budgets": {
+        "smoke": [2097152],
+        "standard": [262144, 491520, 2097152, 8388608],
+        "exhaustive": [0, 122880, 262144, 491520, 1048576, 2097152, 8388608]
+      },
+      "dependencies": [],
+      "caveats": ["SurrealDB's current default is fixed 256 KiB even if stale comments mention dynamic values."]
+    },
+    {
+      "id": "background_work",
+      "description": "Test background jobs and subcompactions around the detected CPU/memory-derived defaults.",
+      "objective_tags": ["throughput", "balanced"],
+      "knobs": ["MAX_BACKGROUND_JOBS", "SUBCOMPACTIONS"],
+      "mode": "cases",
+      "budgets": {
+        "smoke": [],
+        "standard": ["less", "default", "more"],
+        "exhaustive": ["less", "default", "more"]
+      },
+      "dependencies": [],
+      "caveats": ["MAX_BACKGROUND_JOBS and increase_parallelism are related but not the same knob."]
+    },
+    {
+      "id": "table_layout",
+      "description": "Compare SurrealDB's table/index/filter layout against selected alternatives.",
+      "objective_tags": ["scan_heavy", "balanced"],
+      "knobs": ["BLOCK_SIZE", "PARTITION_INDEX_AND_FILTERS", "METADATA_BLOCK_SIZE", "PIN_L0_FILTER_AND_INDEX_BLOCKS_IN_CACHE", "PIN_TOP_LEVEL_INDEX_AND_FILTER", "CACHE_INDEX_AND_FILTER_BLOCKS"],
+      "mode": "cases",
+      "budgets": {
+        "smoke": [],
+        "standard": ["surrealdb", "legacy_metadata", "cache_index_filter"],
+        "exhaustive": ["surrealdb", "legacy_metadata", "cache_index_filter"]
+      },
+      "dependencies": [],
+      "caveats": ["Prefix extractor semantics and SurrealDB key layout are not modeled by db_bench."]
+    },
+    {
+      "id": "blob_shape",
+      "description": "Test BlobDB enablement and blob-file shape for large-value workloads.",
+      "objective_tags": ["blob_heavy", "balanced"],
+      "knobs": ["COMPACTION_STYLE", "MIN_BLOB_SIZE", "BLOB_FILE_SIZE", "BLOB_COMPRESSION_TYPE", "ENABLE_BLOB_GC", "BLOB_GC_AGE_CUTOFF", "BLOB_GC_FORCE_THRESHOLD"],
+      "mode": "cases",
+      "budgets": {
+        "smoke": [],
+        "standard": ["no_blob", "surrealdb_blob", "larger_blob_file"],
+        "exhaustive": ["no_blob", "surrealdb_blob", "larger_blob_file"]
+      },
+      "dependencies": ["VALUE_SIZE >= MIN_BLOB_SIZE for meaningful BlobDB separation"],
+      "caveats": ["SurrealDB disables blob files below 1 GiB effective memory."]
+    },
+    {
+      "id": "wal_behavior",
+      "description": "Model the RocksDB portions of SurrealDB WAL behavior.",
+      "objective_tags": ["throughput", "balanced"],
+      "knobs": ["WAL_SIZE_LIMIT_MB", "WAL_BYTES_PER_SYNC", "MANUAL_WAL_FLUSH"],
+      "mode": "cases",
+      "budgets": {
+        "smoke": [],
+        "standard": ["surrealdb", "rocksdb_default_flush"],
+        "exhaustive": ["surrealdb", "rocksdb_default_flush"]
+      },
+      "dependencies": [],
+      "caveats": ["Grouped commit timeout, wait threshold, and max batch size require a SurrealDB workload harness."]
+    }
+  ]
+}

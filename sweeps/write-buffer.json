@@ -1,0 +1,9 @@
+{
+  "name": "write_buffer",
+  "mode": "one_at_a_time",
+  "params": {
+    "WRITE_BUFFER_SIZE_MB": [16, 32, 64, 128, 256],
+    "MAX_BACKGROUND_JOBS": [4, 8, 16]
+  },
+  "notes": "Default mode varies one setting at a time; use matrix mode for interaction studies."
+}

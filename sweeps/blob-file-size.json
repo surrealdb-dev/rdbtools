@@ -1,0 +1,11 @@
+{
+  "name": "blob_file_size",
+  "mode": "one_at_a_time",
+  "params": {
+    "BLOB_FILE_SIZE": [8388608, 16777216, 67108864, 268435456]
+  },
+  "requires": {
+    "COMPACTION_STYLE": "blob"
+  },
+  "notes": "Small values can require ulimit -n 100000."
+}

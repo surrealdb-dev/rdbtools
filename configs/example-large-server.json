@@ -1,0 +1,27 @@
+{
+  "name": "large-server-leveled",
+  "description": "Realistic large-server (48 cores, 128 GiB RAM) RocksDB benchmark. 40 threads, 1800s per phase, leveled compaction, three workloads (cached / buffered IO / direct IO). 100M cached keys, 2B IO-bound keys.",
+  "binary_dir": "bin",
+  "binaries": ["10.6.clang"],
+  "db_dir": "/data/m/rx",
+  "output_dir": "runs/large-server-leveled",
+  "machine": "c48r128",
+  "workloads": ["byrx", "iobuf", "iodir"],
+  "pipeline": "lsm-default",
+  "nk_mem": 100000000,
+  "nk_io": 2000000000,
+  "baseline": {
+    "NUM_THREADS": 40,
+    "DURATION_RW": 1800,
+    "DURATION_RO": 1800,
+    "COMPACTION_STYLE": "leveled"
+  },
+  "sweeps": [],
+  "execution": {
+    "remove_db_before_version": true,
+    "cooldown_seconds": 60,
+    "smoke": false,
+    "clean_env": false,
+    "capture_io_stats": true
+  }
+}

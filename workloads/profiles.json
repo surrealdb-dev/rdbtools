@@ -1,0 +1,150 @@
+{
+  "byrx": {
+    "description": "Memory-sized RocksDB profile with buffered IO and no compression",
+    "key_count_source": "nk_mem",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "none",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "USE_O_DIRECT": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "byos": {
+    "description": "OS-cache profile with buffered IO and no compression",
+    "key_count_source": "nk_mem",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "none",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "USE_O_DIRECT": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 0
+    }
+  },
+  "iobuf": {
+    "description": "Larger IO-sized buffered profile, commonly used with lz4",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "lz4",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "USE_O_DIRECT": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "iodir": {
+    "description": "Larger IO-sized direct-IO profile, commonly used with lz4",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "lz4",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "USE_O_DIRECT": 1,
+      "BYTES_PER_SYNC": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "iodir_none": {
+    "description": "Direct-IO profile with no compression",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "none",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "USE_O_DIRECT": 1,
+      "BYTES_PER_SYNC": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "iodir_lz4": {
+    "description": "Direct-IO profile with lz4 compression",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "lz4",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "USE_O_DIRECT": 1,
+      "BYTES_PER_SYNC": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "iodir_zstd": {
+    "description": "Direct-IO profile with zstd compression",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "zstd",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "USE_O_DIRECT": 1,
+      "BYTES_PER_SYNC": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "iodir_nnl": {
+    "description": "Direct-IO no top compression with lz4 bottommost compression",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "none",
+      "BOTTOMMOST_COMPRESSION": "lz4",
+      "USE_O_DIRECT": 1,
+      "BYTES_PER_SYNC": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "iodir_nnz": {
+    "description": "Direct-IO no top compression with zstd bottommost compression",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "none",
+      "BOTTOMMOST_COMPRESSION": "zstd",
+      "USE_O_DIRECT": 1,
+      "BYTES_PER_SYNC": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "iodir_nlz": {
+    "description": "Direct-IO lz4 top compression with zstd bottommost compression",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 400,
+      "COMPRESSION_TYPE": "lz4",
+      "BOTTOMMOST_COMPRESSION": "zstd",
+      "USE_O_DIRECT": 1,
+      "BYTES_PER_SYNC": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "blob-iobuf": {
+    "description": "Buffered BlobDB profile with larger values and GC defaults",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 3200,
+      "COMPACTION_STYLE": "blob",
+      "COMPRESSION_TYPE": "lz4",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "BLOB_COMPRESSION_TYPE": "lz4",
+      "BLOB_GC_AGE_CUTOFF": 0.25,
+      "BLOB_GC_FORCE_THRESHOLD": 1,
+      "USE_O_DIRECT": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  },
+  "blob-iodir": {
+    "description": "Direct-IO BlobDB profile with larger values and GC defaults",
+    "key_count_source": "nk_io",
+    "env": {
+      "VALUE_SIZE": 3200,
+      "COMPACTION_STYLE": "blob",
+      "COMPRESSION_TYPE": "lz4",
+      "BOTTOMMOST_COMPRESSION": "disable",
+      "BLOB_COMPRESSION_TYPE": "lz4",
+      "BLOB_GC_AGE_CUTOFF": 0.25,
+      "BLOB_GC_FORCE_THRESHOLD": 1,
+      "USE_O_DIRECT": 1,
+      "BYTES_PER_SYNC": 0,
+      "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+    }
+  }
+}

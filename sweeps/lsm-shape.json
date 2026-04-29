@@ -1,0 +1,10 @@
+{
+  "name": "lsm_shape",
+  "mode": "matrix",
+  "params": {
+    "WRITE_BUFFER_SIZE_MB": [16, 64, 128],
+    "TARGET_FILE_SIZE_BASE_MB": [16, 64, 128],
+    "MAX_BYTES_FOR_LEVEL_BASE_MB": [64, 256, 512]
+  },
+  "notes": "Explicit matrix sweep because these values interact and can grow runtime quickly."
+}

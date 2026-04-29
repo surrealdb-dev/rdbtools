@@ -1,0 +1,179 @@
+{
+  "name": "lsm-default",
+  "description": "Deterministic LSM benchmark phase order: load, drain, read-only, overwrite-some, flush, mixed read/write with 2 MB/s rate limit, terminal write-heavy. Derived from the legacy bench/rx2/benchmark_compare.sh sequence.",
+  "phases": [
+    {
+      "name": "load",
+      "job": "fillseq_disable_wal",
+      "rate_limited": false,
+      "db_bench": {
+        "benchmarks": ["fillseq", "stats"],
+        "phase_flags": {
+          "use_existing_db": 0,
+          "sync": 0,
+          "threads": 1,
+          "memtablerep": "vector",
+          "allow_concurrent_memtable_write": false,
+          "disable_wal": 1
+        }
+      },
+      "env": {
+        "DB_BENCH_NO_SYNC": 1,
+        "DURATION": 0,
+        "WRITES": 0
+      }
+    },
+    {
+      "name": "drain_revrange",
+      "job": "revrange",
+      "rate_limited": false,
+      "db_bench": {
+        "benchmarks": ["seekrandom", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "reverse_iterator": true
+        }
+      },
+      "env": {
+        "DURATION": 300,
+        "NUM_KEYS": 100,
+        "NUM_THREADS": 1
+      }
+    },
+    {
+      "name": "readrandom",
+      "job": "readrandom",
+      "rate_limited": false,
+      "full_only": true,
+      "db_bench": {
+        "benchmarks": ["readrandom", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1
+        }
+      },
+      "env": {}
+    },
+    {
+      "name": "fwdrange",
+      "job": "fwdrange",
+      "rate_limited": false,
+      "full_only": true,
+      "db_bench": {
+        "benchmarks": ["seekrandom", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "reverse_iterator": false
+        }
+      },
+      "env": {}
+    },
+    {
+      "name": "multireadrandom",
+      "job": "multireadrandom",
+      "rate_limited": false,
+      "full_only": true,
+      "db_bench": {
+        "benchmarks": ["multireadrandom", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "batch_size": 10
+        }
+      },
+      "env": {
+        "MULTIREAD_BATCHED": 1
+      }
+    },
+    {
+      "name": "overwritesome",
+      "job": "overwritesome",
+      "rate_limited": false,
+      "db_bench": {
+        "benchmarks": ["overwrite", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "merge_operator": "put"
+        }
+      },
+      "env": {
+        "WRITES_EXPR": "NUM_KEYS / NUM_THREADS / 10",
+        "DURATION": 0
+      }
+    },
+    {
+      "name": "flush_mt_l0",
+      "job": "flush_mt_l0",
+      "rate_limited": false,
+      "db_bench": {
+        "benchmarks": ["levelstats", "flush", "waitforcompaction", "compact0", "waitforcompaction", "memstats", "levelstats", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "sync": 0,
+          "threads": 1
+        }
+      },
+      "env": {}
+    },
+    {
+      "name": "revrangewhilewriting",
+      "job": "revrangewhilewriting",
+      "rate_limited": true,
+      "db_bench": {
+        "benchmarks": ["seekrandomwhilewriting", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "merge_operator": "put",
+          "reverse_iterator": true
+        }
+      },
+      "env": {
+        "MB_WRITE_PER_SEC": 2
+      }
+    },
+    {
+      "name": "fwdrangewhilewriting",
+      "job": "fwdrangewhilewriting",
+      "rate_limited": true,
+      "db_bench": {
+        "benchmarks": ["seekrandomwhilewriting", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "merge_operator": "put",
+          "reverse_iterator": false
+        }
+      },
+      "env": {
+        "MB_WRITE_PER_SEC": 2
+      }
+    },
+    {
+      "name": "readwhilewriting",
+      "job": "readwhilewriting",
+      "rate_limited": true,
+      "db_bench": {
+        "benchmarks": ["readwhilewriting", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "merge_operator": "put"
+        }
+      },
+      "env": {
+        "MB_WRITE_PER_SEC": 2
+      }
+    },
+    {
+      "name": "overwriteandwait",
+      "job": "overwriteandwait",
+      "rate_limited": true,
+      "db_bench": {
+        "benchmarks": ["overwrite", "flush", "levelstats", "waitforcompaction", "stats"],
+        "phase_flags": {
+          "use_existing_db": 1,
+          "merge_operator": "put"
+        }
+      },
+      "env": {
+        "FALLBACK_JOB": "overwrite"
+      }
+    }
+  ]
+}

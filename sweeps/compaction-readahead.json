@@ -1,0 +1,8 @@
+{
+  "name": "compaction_readahead",
+  "mode": "one_at_a_time",
+  "params": {
+    "COMPACTION_READAHEAD_SIZE": [0, 122880, 262144, 491520, 2097152]
+  },
+  "notes": "Useful with buffered/direct IO variants and compression variants."
+}

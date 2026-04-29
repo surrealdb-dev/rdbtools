@@ -1,0 +1,683 @@
+{
+  "options": [
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "false",
+        "kind": "literal"
+      },
+      "description": "Whether MVCC versioning is enabled.",
+      "executor": "surrealdb",
+      "field": "versioned",
+      "rdbtools_env": "DATASTORE_VERSIONED",
+      "rust_type": "bool",
+      "surrealdb_env": "SURREAL_DATASTORE_VERSIONED",
+      "surrealdb_key": "datastore_versioned"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "Duration::ZERO",
+        "kind": "literal"
+      },
+      "description": "Version retention period in nanoseconds (0 = unlimited).",
+      "executor": "surrealdb",
+      "field": "retention",
+      "rdbtools_env": "DATASTORE_RETENTION",
+      "rust_type": "Duration",
+      "surrealdb_env": "SURREAL_DATASTORE_RETENTION",
+      "surrealdb_key": "datastore_retention"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "SyncMode::Every",
+        "kind": "literal"
+      },
+      "description": "Disk sync mode.",
+      "executor": "surrealdb",
+      "field": "sync_mode",
+      "rdbtools_env": "DATASTORE_SYNC",
+      "rust_type": "SyncMode",
+      "surrealdb_env": "SURREAL_DATASTORE_SYNC",
+      "surrealdb_key": "datastore_sync"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "increase_parallelism",
+      "default": {
+        "expression": "cpu_count",
+        "kind": "literal"
+      },
+      "description": "The number of threads to start for flushing and compaction (default: number of CPUs)",
+      "executor": "surrealdb",
+      "field": "thread_count",
+      "rdbtools_env": "ROCKSDB_THREAD_COUNT",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_THREAD_COUNT",
+      "surrealdb_key": "rocksdb_thread_count"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--max_background_jobs",
+      "default": {
+        "expression": "min(cpu_count * 2, max(total_memory / 128 MiB, 2))",
+        "kind": "dynamic"
+      },
+      "description": "The maximum number of background jobs (flush and compaction workers) that RocksDB may run concurrently. Defaults to `cpu_count * 2`, capped at roughly one job per 128 MiB of system memory and never below 2, so that a large host running inside a small cgroup does not spawn more background threads than the memory budget comfortably supports.",
+      "executor": "db_bench",
+      "field": "jobs_count",
+      "rdbtools_env": "MAX_BACKGROUND_JOBS",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_JOBS_COUNT",
+      "surrealdb_key": "rocksdb_jobs_count"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--open_files",
+      "default": {
+        "expression": "< 1 GiB: 256, < 4 GiB: 512, otherwise 1026",
+        "kind": "dynamic"
+      },
+      "description": "The maximum number of open files which can be opened by RocksDB (default: dynamic from 256 to 1026 depending on system memory). Each open SST pins table reader state (index, filter, prefix metadata) in memory, so the cap is kept proportional to the available memory budget.",
+      "executor": "db_bench",
+      "field": "max_open_files",
+      "rdbtools_env": "OPEN_FILES",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_MAX_OPEN_FILES",
+      "surrealdb_key": "rocksdb_max_open_files"
+    },
+    {
+      "category": "cache",
+      "db_bench_flag": "--block_size",
+      "default": {
+        "expression": "64 * 1024",
+        "kind": "literal"
+      },
+      "description": "The size of each uncompressed data block in bytes (default: 64 KiB)",
+      "executor": "db_bench",
+      "field": "block_size",
+      "rdbtools_env": "BLOCK_SIZE",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_BLOCK_SIZE",
+      "surrealdb_key": "rocksdb_block_size"
+    },
+    {
+      "category": "wal",
+      "db_bench_flag": "set_wal_size_limit_mb",
+      "default": {
+        "expression": "< 1 GiB: 32 MiB, < 16 GiB: 128 MiB, otherwise 0",
+        "kind": "dynamic"
+      },
+      "description": "The limit (in MiB) on archived write-ahead-log retention; once obsolete WAL files exceed this budget RocksDB deletes the oldest first. Does not affect the active WAL or force flushes. Set to 0 for unlimited retention (default: dynamic from 32 MiB to unlimited depending on system memory).",
+      "executor": "surrealdb",
+      "field": "wal_size_limit",
+      "rdbtools_env": "WAL_SIZE_LIMIT_MB",
+      "rust_type": "u64",
+      "surrealdb_env": "SURREAL_ROCKSDB_WAL_SIZE_LIMIT",
+      "surrealdb_key": "rocksdb_wal_size_limit"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--target_file_size_base",
+      "default": {
+        "expression": "< 1 GiB: 8 MiB, < 4 GiB: 16 MiB, < 16 GiB: 32 MiB, otherwise 64 MiB",
+        "kind": "dynamic"
+      },
+      "description": "The target file size for compaction in bytes (default: dynamic from 8 MiB to 64 MiB depending on system memory)",
+      "executor": "db_bench",
+      "field": "target_file_size_base",
+      "rdbtools_env": "TARGET_FILE_SIZE_BASE_MB",
+      "rust_type": "u64",
+      "surrealdb_env": "SURREAL_ROCKSDB_TARGET_FILE_SIZE_BASE",
+      "surrealdb_key": "rocksdb_target_file_size_base"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--target_file_size_multiplier",
+      "default": {
+        "expression": "2",
+        "kind": "literal"
+      },
+      "description": "The target file size multiplier for each compaction level (default: 2)",
+      "executor": "db_bench",
+      "field": "target_file_size_multiplier",
+      "rdbtools_env": "TARGET_FILE_SIZE_MULTIPLIER",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_TARGET_FILE_SIZE_MULTIPLIER",
+      "surrealdb_key": "rocksdb_target_file_size_multiplier"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--level0_file_num_compaction_trigger",
+      "default": {
+        "expression": "4",
+        "kind": "literal"
+      },
+      "description": "The number of files needed to trigger level 0 compaction (default: 4)",
+      "executor": "db_bench",
+      "field": "file_compaction_trigger",
+      "rdbtools_env": "LEVEL0_FILE_NUM_COMPACTION_TRIGGER",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_FILE_COMPACTION_TRIGGER",
+      "surrealdb_key": "rocksdb_file_compaction_trigger"
+    },
+    {
+      "category": "io",
+      "db_bench_flag": "--compaction_readahead_size",
+      "default": {
+        "expression": "256 KiB",
+        "kind": "dynamic"
+      },
+      "description": "The readahead buffer size used during compaction (default: dynamic from 4 MiB to 16 MiB)",
+      "executor": "db_bench",
+      "field": "compaction_readahead_size",
+      "rdbtools_env": "COMPACTION_READAHEAD_SIZE",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_COMPACTION_READAHEAD_SIZE",
+      "surrealdb_key": "rocksdb_compaction_readahead_size"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--subcompactions",
+      "default": {
+        "expression": "available_parallelism clamped to [1, 4]",
+        "kind": "dynamic"
+      },
+      "description": "The maximum number of threads which will perform subcompactions (default: `min(cpu_count, 4)`). Clamped against the process's available parallelism so a large host running inside a small cgroup does not oversubscribe the CPU budget with subcompaction workers.",
+      "executor": "db_bench",
+      "field": "max_concurrent_subcompactions",
+      "rdbtools_env": "SUBCOMPACTIONS",
+      "rust_type": "u32",
+      "surrealdb_env": "SURREAL_ROCKSDB_MAX_CONCURRENT_SUBCOMPACTIONS",
+      "surrealdb_key": "rocksdb_max_concurrent_subcompactions"
+    },
+    {
+      "category": "write-path",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "true",
+        "kind": "literal"
+      },
+      "description": "Use separate queues for WAL writes and memtable writes (default: true)",
+      "executor": "surrealdb",
+      "field": "enable_pipelined_writes",
+      "rdbtools_env": "ENABLE_PIPELINED_WRITES",
+      "rust_type": "bool",
+      "surrealdb_env": "SURREAL_ROCKSDB_ENABLE_PIPELINED_WRITES",
+      "surrealdb_key": "rocksdb_enable_pipelined_writes"
+    },
+    {
+      "category": "ops",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "< 1 GiB: 2, < 4 GiB: 5, otherwise 10",
+        "kind": "dynamic"
+      },
+      "description": "The maximum number of information log files to keep on disk (default: dynamic from 2 to 10 depending on system memory). Lower retention saves disk on small deployments; larger systems retain the previous default for easier post-mortem debugging.",
+      "executor": "surrealdb",
+      "field": "keep_log_file_num",
+      "rdbtools_env": "KEEP_LOG_FILE_NUM",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_KEEP_LOG_FILE_NUM",
+      "surrealdb_key": "rocksdb_keep_log_file_num"
+    },
+    {
+      "category": "ops",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "\"warn\".to_owned()",
+        "kind": "literal"
+      },
+      "description": "The information log level of the RocksDB library (default: \"warn\")",
+      "executor": "surrealdb",
+      "field": "storage_log_level",
+      "rdbtools_env": "STORAGE_LOG_LEVEL",
+      "rust_type": "String",
+      "surrealdb_env": "SURREAL_ROCKSDB_STORAGE_LOG_LEVEL",
+      "surrealdb_key": "rocksdb_storage_log_level"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--compaction_style",
+      "default": {
+        "expression": "\"level\".to_owned()",
+        "kind": "literal"
+      },
+      "description": "Use to specify the database compaction style (default: \"level\")",
+      "executor": "db_bench",
+      "field": "compaction_style",
+      "rdbtools_env": "COMPACTION_STYLE",
+      "rust_type": "String",
+      "surrealdb_env": "SURREAL_ROCKSDB_COMPACTION_STYLE",
+      "surrealdb_key": "rocksdb_compaction_style"
+    },
+    {
+      "category": "delete-compaction",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "1000",
+        "kind": "literal"
+      },
+      "description": "The size of the window used to track deletions (default: 1000)",
+      "executor": "surrealdb",
+      "field": "deletion_factory_window_size",
+      "rdbtools_env": "DELETION_FACTORY_WINDOW_SIZE",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_DELETION_FACTORY_WINDOW_SIZE",
+      "surrealdb_key": "rocksdb_deletion_factory_window_size"
+    },
+    {
+      "category": "delete-compaction",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "50",
+        "kind": "literal"
+      },
+      "description": "The number of deletions to track in the window (default: 50)",
+      "executor": "surrealdb",
+      "field": "deletion_factory_delete_count",
+      "rdbtools_env": "DELETION_FACTORY_DELETE_COUNT",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_DELETION_FACTORY_DELETE_COUNT",
+      "surrealdb_key": "rocksdb_deletion_factory_delete_count"
+    },
+    {
+      "category": "delete-compaction",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "0.5",
+        "kind": "literal"
+      },
+      "description": "The ratio of deletions to track in the window (default: 0.5)",
+      "executor": "surrealdb",
+      "field": "deletion_factory_ratio",
+      "rdbtools_env": "DELETION_FACTORY_RATIO",
+      "rust_type": "f64",
+      "surrealdb_env": "SURREAL_ROCKSDB_DELETION_FACTORY_RATIO",
+      "surrealdb_key": "rocksdb_deletion_factory_ratio"
+    },
+    {
+      "category": "blobdb",
+      "db_bench_flag": "--enable_blob_files",
+      "default": {
+        "expression": "TOTAL_SYSTEM_MEMORY >= 1 GiB",
+        "kind": "dynamic"
+      },
+      "depends_on": {
+        "COMPACTION_STYLE": "blob"
+      },
+      "description": "Whether to enable separate key and value file storage (default: true on systems with >= 1 GiB of memory, false below). The blob GC loop, extra file descriptors and additional compaction readahead are not worth the complexity on very small deployments.",
+      "executor": "db_bench",
+      "field": "enable_blob_files",
+      "rdbtools_env": "COMPACTION_STYLE",
+      "rust_type": "bool",
+      "surrealdb_env": "SURREAL_ROCKSDB_ENABLE_BLOB_FILES",
+      "surrealdb_key": "rocksdb_enable_blob_files"
+    },
+    {
+      "category": "blobdb",
+      "db_bench_flag": "--min_blob_size",
+      "default": {
+        "expression": "4 * 1024",
+        "kind": "literal"
+      },
+      "depends_on": {
+        "COMPACTION_STYLE": "blob"
+      },
+      "description": "The minimum size of a value for it to be stored in blob files (default: 4 KiB)",
+      "executor": "db_bench",
+      "field": "min_blob_size",
+      "rdbtools_env": "MIN_BLOB_SIZE",
+      "rust_type": "u64",
+      "surrealdb_env": "SURREAL_ROCKSDB_MIN_BLOB_SIZE",
+      "surrealdb_key": "rocksdb_min_blob_size"
+    },
+    {
+      "category": "blobdb",
+      "db_bench_flag": "--blob_file_size",
+      "default": {
+        "expression": "< 1 GiB: 16 MiB, < 4 GiB: 64 MiB, < 16 GiB: 128 MiB, otherwise 256 MiB",
+        "kind": "dynamic"
+      },
+      "depends_on": {
+        "COMPACTION_STYLE": "blob"
+      },
+      "description": "The target blob file size (default: dynamic from 16 MiB to 256 MiB depending on system memory)",
+      "executor": "db_bench",
+      "field": "blob_file_size",
+      "rdbtools_env": "BLOB_FILE_SIZE",
+      "rust_type": "u64",
+      "surrealdb_env": "SURREAL_ROCKSDB_BLOB_FILE_SIZE",
+      "surrealdb_key": "rocksdb_blob_file_size"
+    },
+    {
+      "category": "blobdb",
+      "db_bench_flag": "--blob_compression_type",
+      "default": {
+        "expression": "Default::default()",
+        "kind": "literal"
+      },
+      "depends_on": {
+        "COMPACTION_STYLE": "blob"
+      },
+      "description": "Compression type used for blob files (default: \"snappy\") Supported values: \"none\", \"snappy\", \"lz4\", \"zstd\"",
+      "executor": "db_bench",
+      "field": "blob_compression_type",
+      "rdbtools_env": "BLOB_COMPRESSION_TYPE",
+      "rust_type": "BlobCompression",
+      "surrealdb_env": "SURREAL_ROCKSDB_BLOB_COMPRESSION_TYPE",
+      "surrealdb_key": "rocksdb_blob_compression_type"
+    },
+    {
+      "category": "blobdb",
+      "db_bench_flag": "--enable_blob_garbage_collection",
+      "default": {
+        "expression": "true",
+        "kind": "literal"
+      },
+      "depends_on": {
+        "COMPACTION_STYLE": "blob"
+      },
+      "description": "Whether to enable blob garbage collection (default: true)",
+      "executor": "db_bench",
+      "field": "enable_blob_gc",
+      "rdbtools_env": "ENABLE_BLOB_GC",
+      "rust_type": "bool",
+      "surrealdb_env": "SURREAL_ROCKSDB_ENABLE_BLOB_GC",
+      "surrealdb_key": "rocksdb_enable_blob_gc"
+    },
+    {
+      "category": "blobdb",
+      "db_bench_flag": "--blob_garbage_collection_age_cutoff",
+      "default": {
+        "expression": "0.5",
+        "kind": "literal"
+      },
+      "depends_on": {
+        "COMPACTION_STYLE": "blob"
+      },
+      "description": "Fractional age cutoff for blob GC eligibility between 0 and 1 (default: 0.5)",
+      "executor": "db_bench",
+      "field": "blob_gc_age_cutoff",
+      "rdbtools_env": "BLOB_GC_AGE_CUTOFF",
+      "rust_type": "f64",
+      "surrealdb_env": "SURREAL_ROCKSDB_BLOB_GC_AGE_CUTOFF",
+      "surrealdb_key": "rocksdb_blob_gc_age_cutoff"
+    },
+    {
+      "category": "blobdb",
+      "db_bench_flag": "--blob_garbage_collection_force_threshold",
+      "default": {
+        "expression": "0.5",
+        "kind": "literal"
+      },
+      "depends_on": {
+        "COMPACTION_STYLE": "blob"
+      },
+      "description": "Discardable ratio threshold to force GC between 0 and 1 (default: 0.5)",
+      "executor": "db_bench",
+      "field": "blob_gc_force_threshold",
+      "rdbtools_env": "BLOB_GC_FORCE_THRESHOLD",
+      "rust_type": "f64",
+      "surrealdb_env": "SURREAL_ROCKSDB_BLOB_GC_FORCE_THRESHOLD",
+      "surrealdb_key": "rocksdb_blob_gc_force_threshold"
+    },
+    {
+      "category": "blobdb",
+      "db_bench_flag": "--blob_compaction_readahead_size",
+      "default": {
+        "expression": "0",
+        "kind": "literal"
+      },
+      "depends_on": {
+        "COMPACTION_STYLE": "blob"
+      },
+      "description": "Readahead size for blob compaction/GC (default: 0)",
+      "executor": "db_bench",
+      "field": "blob_compaction_readahead_size",
+      "rdbtools_env": "BLOB_COMPACTION_READAHEAD_SIZE",
+      "rust_type": "u64",
+      "surrealdb_env": "SURREAL_ROCKSDB_BLOB_COMPACTION_READAHEAD_SIZE",
+      "surrealdb_key": "rocksdb_blob_compaction_readahead_size"
+    },
+    {
+      "category": "cache",
+      "db_bench_flag": "--cache_size",
+      "default": {
+        "expression": "max(total_memory / 2 - 1 GiB, 16 MiB)",
+        "kind": "dynamic"
+      },
+      "description": "The size of the least-recently-used block cache (default: dynamic depending on system memory)",
+      "executor": "db_bench",
+      "field": "block_cache_size",
+      "rdbtools_env": "CACHE_SIZE",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_BLOCK_CACHE_SIZE",
+      "surrealdb_key": "rocksdb_block_cache_size"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--write_buffer_size",
+      "default": {
+        "expression": "< 1 GiB: 32 MiB, < 16 GiB: 64 MiB, otherwise 128 MiB",
+        "kind": "dynamic"
+      },
+      "description": "The amount of data each write buffer can build up in memory (default: dynamic from 32 MiB to 128 MiB)",
+      "executor": "db_bench",
+      "field": "write_buffer_size",
+      "rdbtools_env": "WRITE_BUFFER_SIZE_MB",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_WRITE_BUFFER_SIZE",
+      "surrealdb_key": "rocksdb_write_buffer_size"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--max_write_buffer_number",
+      "default": {
+        "expression": "< 4 GiB: 2, < 16 GiB: 4, < 64 GiB: 8, otherwise 32",
+        "kind": "dynamic"
+      },
+      "description": "The maximum number of write buffers which can be used (default: dynamic from 2 to 32)",
+      "executor": "db_bench",
+      "field": "max_write_buffer_number",
+      "rdbtools_env": "MAX_WRITE_BUFFER_NUMBER",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_MAX_WRITE_BUFFER_NUMBER",
+      "surrealdb_key": "rocksdb_max_write_buffer_number"
+    },
+    {
+      "category": "lsm",
+      "db_bench_flag": "--min_write_buffer_number_to_merge",
+      "default": {
+        "expression": "2",
+        "kind": "literal"
+      },
+      "description": "The minimum number of write buffers to merge before writing to disk (default: 2)",
+      "executor": "db_bench",
+      "field": "min_write_buffer_number_to_merge",
+      "rdbtools_env": "MIN_WRITE_BUFFER_NUMBER_TO_MERGE",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_MIN_WRITE_BUFFER_NUMBER_TO_MERGE",
+      "surrealdb_key": "rocksdb_min_write_buffer_number_to_merge"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "0",
+        "kind": "literal"
+      },
+      "description": "The maximum allowed space usage for SST files in bytes (default: 0, meaning unlimited). When this limit is reached, the datastore enters read-and-deletion-only mode, where only read and delete operations are allowed. This allows gradual space recovery through data deletion. Set to 0 to disable space monitoring.",
+      "executor": "surrealdb",
+      "field": "sst_max_allowed_space_usage",
+      "rdbtools_env": "ROCKSDB_SST_MAX_ALLOWED_SPACE_USAGE",
+      "rust_type": "u64",
+      "surrealdb_env": "SURREAL_ROCKSDB_SST_MAX_ALLOWED_SPACE_USAGE",
+      "surrealdb_key": "rocksdb_sst_max_allowed_space_usage"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "Duration::from_millis(5).as_nanos() as u64",
+        "kind": "literal"
+      },
+      "description": "The maximum wait time in nanoseconds before forcing a grouped commit (default: 5ms). This timeout ensures that transactions don't wait indefinitely under low concurrency and balances commit latency against write throughput.",
+      "executor": "surrealdb",
+      "field": "grouped_commit_timeout",
+      "rdbtools_env": "ROCKSDB_GROUPED_COMMIT_TIMEOUT",
+      "rust_type": "u64",
+      "surrealdb_env": "SURREAL_ROCKSDB_GROUPED_COMMIT_TIMEOUT",
+      "surrealdb_key": "rocksdb_grouped_commit_timeout"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "12",
+        "kind": "literal"
+      },
+      "description": "Threshold for deciding whether to wait for more transactions (default: 12) If the current batch size is greater or equal to this threshold (and below ROCKSDB_GROUPED_COMMIT_MAX_BATCH_SIZE), then the coordinator will wait up to ROCKSDB_GROUPED_COMMIT_TIMEOUT to collect more transactions. Smaller batches are flushed immediately to preserve low latency.",
+      "executor": "surrealdb",
+      "field": "grouped_commit_wait_threshold",
+      "rdbtools_env": "ROCKSDB_GROUPED_COMMIT_WAIT_THRESHOLD",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_GROUPED_COMMIT_WAIT_THRESHOLD",
+      "surrealdb_key": "rocksdb_grouped_commit_wait_threshold"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "< 1 GiB: 256, < 4 GiB: 1024, otherwise 4096",
+        "kind": "dynamic"
+      },
+      "description": "The maximum number of transactions in a single grouped commit batch (default: dynamic from 256 to 4096 depending on system memory). Each queued transaction holds its write set in memory until the coordinator flushes, so smaller systems use smaller batches to cap transient RSS under bursty write load. Larger batches improve throughput but increase memory usage and commit latency.",
+      "executor": "surrealdb",
+      "field": "grouped_commit_max_batch_size",
+      "rdbtools_env": "ROCKSDB_GROUPED_COMMIT_MAX_BATCH_SIZE",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_GROUPED_COMMIT_MAX_BATCH_SIZE",
+      "surrealdb_key": "rocksdb_grouped_commit_max_batch_size"
+    },
+    {
+      "category": "cache",
+      "db_bench_flag": "--initial_auto_readahead_size",
+      "default": {
+        "expression": "8 * 1024",
+        "kind": "literal"
+      },
+      "description": "The initial readahead size used by RocksDB's implicit (auto) iterator prefetcher. Once an iterator performs `file_reads_for_auto_readahead` sequential file reads, RocksDB starts prefetching at this size and then doubles it on each subsequent read up to `max_auto_readahead_size` (default: 8 KiB)",
+      "executor": "db_bench",
+      "field": "initial_auto_readahead_size",
+      "rdbtools_env": "INITIAL_AUTO_READAHEAD_SIZE",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_INITIAL_AUTO_READAHEAD_SIZE",
+      "surrealdb_key": "rocksdb_initial_auto_readahead_size"
+    },
+    {
+      "category": "cache",
+      "db_bench_flag": "--max_auto_readahead_size",
+      "default": {
+        "expression": "< 1 GiB: 512 KiB, < 4 GiB: 1 MiB, otherwise 4 MiB",
+        "kind": "dynamic"
+      },
+      "description": "The upper bound on RocksDB's implicit (auto) iterator readahead size. Raising this cap (from the RocksDB default of 256 KiB) can significantly improve throughput on long range scans at the cost of additional I/O and memory per iterator. Because each active iterator can grow its readahead up to this cap, many concurrent scans multiply the memory footprint, so the default scales down on small systems (default: dynamic from 512 KiB to 4 MiB depending on system memory).",
+      "executor": "db_bench",
+      "field": "max_auto_readahead_size",
+      "rdbtools_env": "MAX_AUTO_READAHEAD_SIZE",
+      "rust_type": "usize",
+      "surrealdb_env": "SURREAL_ROCKSDB_MAX_AUTO_READAHEAD_SIZE",
+      "surrealdb_key": "rocksdb_max_auto_readahead_size"
+    },
+    {
+      "category": "cache",
+      "db_bench_flag": "--num_file_reads_for_auto_readahead",
+      "default": {
+        "expression": "2",
+        "kind": "literal"
+      },
+      "description": "The number of sequential file reads an iterator must perform on a single SST before RocksDB begins its implicit (auto) readahead. Set to 0 to start prefetching from the very first read (default: 2)",
+      "executor": "db_bench",
+      "field": "file_reads_for_auto_readahead",
+      "rdbtools_env": "FILE_READS_FOR_AUTO_READAHEAD",
+      "rust_type": "u64",
+      "surrealdb_env": "SURREAL_ROCKSDB_FILE_READS_FOR_AUTO_READAHEAD",
+      "surrealdb_key": "rocksdb_file_reads_for_auto_readahead"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "true",
+        "kind": "literal"
+      },
+      "description": "Whether to enable the custom SurrealDB prefix extractor on the RocksDB column family. When enabled, SST bloom filters are built on table+category prefixes (records, indexes, graph edges, refs, per-table metadata) which allows scans to skip entire SSTs that do not contain the scanning table. See `prefix_extractor.rs` for the extractor semantics (default: true)",
+      "executor": "surrealdb",
+      "field": "prefix_extractor_enabled",
+      "rdbtools_env": "ROCKSDB_PREFIX_EXTRACTOR_ENABLED",
+      "rust_type": "bool",
+      "surrealdb_env": "SURREAL_ROCKSDB_PREFIX_EXTRACTOR_ENABLED",
+      "surrealdb_key": "rocksdb_prefix_extractor_enabled"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": "--whole_key_filtering",
+      "default": {
+        "expression": "true",
+        "kind": "literal"
+      },
+      "description": "When the prefix extractor is enabled, controls whether whole keys are also added to the SST bloom filter (in addition to the prefix). * true (default): bloom filter carries both whole keys and prefixes. Point lookups benefit   from the whole-key filter, at the cost of a larger bloom filter footprint. * false: bloom filter carries only prefixes. Smaller bloom filter, but point lookups fall   back to prefix filter + block index search. Useful when the workload is scan-heavy.",
+      "executor": "surrealdb",
+      "field": "whole_key_filtering",
+      "rdbtools_env": "WHOLE_KEY_FILTERING",
+      "rust_type": "bool",
+      "surrealdb_env": "SURREAL_ROCKSDB_WHOLE_KEY_FILTERING",
+      "surrealdb_key": "rocksdb_whole_key_filtering"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "0.1",
+        "kind": "literal"
+      },
+      "description": "When the prefix extractor is enabled, configures the per-memtable prefix bloom filter size as a ratio of the write buffer size (capped at 0.25 by RocksDB). Set to 0 to disable the memtable prefix bloom (default: 0.1).",
+      "executor": "surrealdb",
+      "field": "memtable_prefix_bloom_ratio",
+      "rdbtools_env": "ROCKSDB_MEMTABLE_PREFIX_BLOOM_RATIO",
+      "rust_type": "f64",
+      "surrealdb_env": "SURREAL_ROCKSDB_MEMTABLE_PREFIX_BLOOM_RATIO",
+      "surrealdb_key": "rocksdb_memtable_prefix_bloom_ratio"
+    },
+    {
+      "category": "surrealdb-only",
+      "db_bench_flag": null,
+      "default": {
+        "expression": "< 1 GiB: 512 KiB, < 4 GiB: 1 MiB, otherwise 4 MiB",
+        "kind": "dynamic"
+      },
+      "description": "Scans whose estimated byte size is at or below this threshold execute inline on the async executor thread; above this threshold they are offloaded to the blocking threadpool so they do not stall other async tasks. This applies uniformly to all `ScanLimit` variants: `Bytes(b)` compares `b` directly, while `Count(c)` and `BytesOrCount(b, c)` convert the entry count to an approximate byte size using the caller-supplied per-entry size. The unbounded `count()` path is always offloaded via `affinitypool::spawn_local` regardless of this value (default: dynamic from 512 KiB to 4 MiB depending on system memory)",
+      "executor": "surrealdb",
+      "field": "inline_scan_threshold",
+      "rdbtools_env": "ROCKSDB_INLINE_SCAN_THRESHOLD",
+      "rust_type": "u32",
+      "surrealdb_env": null,
+      "surrealdb_key": null
+    }
+  ],
+  "source": {
+    "files": [
+      "core/src/kvs/rocksdb/cnf.rs",
+      "core/src/kvs/rocksdb/mod.rs",
+      "core/src/kvs/rocksdb/memory_manager.rs"
+    ],
+    "kind": "surrealdb-rocksdb-cnf",
+    "repo": "/Users/kfarhan/workspace/surrealdb/surrealdb-private/surrealdb"
+  },
+  "warnings": []
+}

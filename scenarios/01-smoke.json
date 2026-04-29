@@ -1,0 +1,26 @@
+{
+  "name": "smoke",
+  "description": "Small starter scenario for validating binary discovery, profile resolution, and phase expansion before running a real benchmark.",
+  "binary_dir": "bin",
+  "binaries": ["10.6.clang"],
+  "db_dir": "/data/m/rx",
+  "output_dir": "runs/smoke",
+  "machine": "c8r16",
+  "workloads": ["iobuf"],
+  "pipeline": "lsm-default",
+  "baseline": {
+    "NUM_THREADS": 1,
+    "NUM_KEYS": 1000000,
+    "VALUE_SIZE": 400,
+    "DURATION_RW": 30,
+    "DURATION_RO": 30,
+    "COMPACTION_STYLE": "leveled"
+  },
+  "sweeps": [],
+  "execution": {
+    "remove_db_before_version": true,
+    "cooldown_seconds": 0,
+    "smoke": true,
+    "clean_env": false
+  }
+}

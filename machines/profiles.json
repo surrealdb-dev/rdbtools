@@ -1,0 +1,189 @@
+{
+  "c4r16": {
+    "description": "4 CPU / 16 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 16,
+      "TARGET_FILE_SIZE_BASE_MB": 16,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 64,
+      "MAX_BACKGROUND_JOBS": 4,
+      "CACHE_SIZE_MB": 4096,
+      "SUBCOMPACTIONS": 1
+    }
+  },
+  "c4bc1g": {
+    "description": "4 CPU profile with 1 GiB block cache",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 16,
+      "TARGET_FILE_SIZE_BASE_MB": 16,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 64,
+      "MAX_BACKGROUND_JOBS": 4,
+      "CACHE_SIZE_MB": 1024,
+      "SUBCOMPACTIONS": 1
+    }
+  },
+  "c8r16": {
+    "description": "8 CPU / 16 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 16,
+      "TARGET_FILE_SIZE_BASE_MB": 16,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 64,
+      "MAX_BACKGROUND_JOBS": 4,
+      "CACHE_SIZE_MB": 4096,
+      "SUBCOMPACTIONS": 2
+    }
+  },
+  "c8r32": {
+    "description": "8 CPU / 32 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 32,
+      "TARGET_FILE_SIZE_BASE_MB": 32,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 128,
+      "MAX_BACKGROUND_JOBS": 6,
+      "CACHE_SIZE_MB": 8192,
+      "SUBCOMPACTIONS": 2
+    }
+  },
+  "c16r16": {
+    "description": "16 CPU / 16 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 16,
+      "TARGET_FILE_SIZE_BASE_MB": 16,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 64,
+      "MAX_BACKGROUND_JOBS": 8,
+      "CACHE_SIZE_MB": 4096,
+      "SUBCOMPACTIONS": 2
+    }
+  },
+  "c16r64": {
+    "description": "16 CPU / 64 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 64,
+      "TARGET_FILE_SIZE_BASE_MB": 64,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 256,
+      "MAX_BACKGROUND_JOBS": 8,
+      "CACHE_SIZE_MB": 16384,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c16r64b": {
+    "description": "16 CPU / 64 GiB memory class with larger block cache",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 64,
+      "TARGET_FILE_SIZE_BASE_MB": 64,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 256,
+      "MAX_BACKGROUND_JOBS": 8,
+      "CACHE_SIZE_MB": 32768,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c16bc1g": {
+    "description": "16 CPU profile with 1 GiB block cache",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 64,
+      "TARGET_FILE_SIZE_BASE_MB": 64,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 256,
+      "MAX_BACKGROUND_JOBS": 8,
+      "CACHE_SIZE_MB": 1024,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c24r64": {
+    "description": "24 CPU / 64 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 64,
+      "TARGET_FILE_SIZE_BASE_MB": 64,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 256,
+      "MAX_BACKGROUND_JOBS": 12,
+      "CACHE_SIZE_MB": 16384,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c30r240": {
+    "description": "30 CPU / 240 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 128,
+      "TARGET_FILE_SIZE_BASE_MB": 128,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 512,
+      "MAX_BACKGROUND_JOBS": 16,
+      "CACHE_SIZE_MB": 65536,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c30r240bc150": {
+    "description": "30 CPU / 240 GiB memory class with 150 GiB block cache",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 128,
+      "TARGET_FILE_SIZE_BASE_MB": 128,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 512,
+      "MAX_BACKGROUND_JOBS": 16,
+      "CACHE_SIZE_MB": 153600,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c32r128": {
+    "description": "32 CPU / 128 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 128,
+      "TARGET_FILE_SIZE_BASE_MB": 128,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 512,
+      "MAX_BACKGROUND_JOBS": 16,
+      "CACHE_SIZE_MB": 32768,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c40r256": {
+    "description": "40 CPU / 256 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 128,
+      "TARGET_FILE_SIZE_BASE_MB": 128,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 512,
+      "MAX_BACKGROUND_JOBS": 20,
+      "CACHE_SIZE_MB": 65536,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c40r256bc180": {
+    "description": "40 CPU / 256 GiB memory class with 180 GiB block cache",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 128,
+      "TARGET_FILE_SIZE_BASE_MB": 128,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 512,
+      "MAX_BACKGROUND_JOBS": 20,
+      "CACHE_SIZE_MB": 184320,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c40bc1g": {
+    "description": "40 CPU profile with 1 GiB block cache",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 128,
+      "TARGET_FILE_SIZE_BASE_MB": 128,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 512,
+      "MAX_BACKGROUND_JOBS": 20,
+      "CACHE_SIZE_MB": 1024,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c48r128": {
+    "description": "48 CPU / 128 GiB memory class",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 128,
+      "TARGET_FILE_SIZE_BASE_MB": 128,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 512,
+      "MAX_BACKGROUND_JOBS": 24,
+      "CACHE_SIZE_MB": 32768,
+      "SUBCOMPACTIONS": 4
+    }
+  },
+  "c64r120": {
+    "description": "64 CPU / 120 GiB benchmark machine",
+    "env": {
+      "WRITE_BUFFER_SIZE_MB": 128,
+      "TARGET_FILE_SIZE_BASE_MB": 128,
+      "MAX_BYTES_FOR_LEVEL_BASE_MB": 512,
+      "MAX_BACKGROUND_JOBS": 32,
+      "CACHE_SIZE_MB": 32768,
+      "SUBCOMPACTIONS": 4
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "readahead_io_matrix",
+  "mode": "matrix",
+  "params": {
+    "COMPACTION_READAHEAD_SIZE": [122880, 262144, 491520, 2097152],
+    "USE_O_DIRECT": [0, 1],
+    "COMPRESSION_TYPE": ["none", "lz4"]
+  },
+  "notes": "Interaction sweep for readahead, direct IO, and compression."
+}

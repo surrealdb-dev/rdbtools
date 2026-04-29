@@ -1,0 +1,11 @@
+{
+  "name": "surrealdb-rocksdb-overrides",
+  "description": "Hand-curated benchmark defaults that can be layered over generated SurrealDB cnf.rs metadata.",
+  "baseline": {
+    "NUM_THREADS": 1,
+    "DURATION_RW": 30,
+    "DURATION_RO": 30,
+    "MIN_LEVEL_TO_COMPRESS": 3,
+    "CACHE_INDEX_AND_FILTER_BLOCKS": 1
+  }
+}
